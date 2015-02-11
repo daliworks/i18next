@@ -164,10 +164,22 @@
         },
     
         _storeLocal: function(store) {
+            var stringLng;
+
             if(window.localStorage) {
                 for (var m in store) {
                     store[m].i18nStamp = new Date().getTime();
-                    f.localStorage.setItem('res_' + m, JSON.stringify(store[m]));
+                    stringLng = JSON.stringify(store[m]);
+                    f.localStorage.setItem('res_' + m, stringLng);
+
+                    var local = window.localStorage.getItem('res_' + m);
+                    
+                    if (stringLng !== local) {
+                        console.info('[i18next] not equal', m, store);
+                        window.localStorage.removeItem('res_' + m);
+                    } else {
+                        console.info('[i18next] equal', m, store);
+                    }
                 }
             }
             return;
